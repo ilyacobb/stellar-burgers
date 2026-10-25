@@ -29,7 +29,19 @@ export const Profile = (): React.JSX.Element => {
 
   const handleSubmit = (e: SyntheticEvent): void => {
     e.preventDefault();
-    void dispatch(updateUser(formValue));
+
+    dispatch(updateUser(formValue))
+      .unwrap()
+      .then(() => {
+        setFormValue((prevState) => ({
+          ...prevState,
+          password: '',
+        }));
+      })
+      .catch((error: unknown) => {
+        // ошибка обрабатывается в slice / уведомлениях
+        console.error('Не удалось сохранить профиль:', error);
+      });
   };
 
   const handleCancel = (e: SyntheticEvent): void => {

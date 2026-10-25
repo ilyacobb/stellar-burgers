@@ -15,6 +15,7 @@ import {
   Route,
   useLocation,
   useNavigate,
+  useParams,
   type Location,
 } from 'react-router-dom';
 
@@ -23,8 +24,12 @@ import styles from '../app/app.module.css';
 export const RouteComponent = (): React.JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { number } = useParams();
   const background = (location.state as { background?: Location })?.background;
   const closeModal = (): void => void navigate(-1);
+
+  const orderTitle = number ? `#${number}` : 'Детали заказа';
+
   return (
     <>
       <Routes location={background ?? location}>
@@ -83,7 +88,7 @@ export const RouteComponent = (): React.JSX.Element => {
           element={
             <div className={styles.detailPageWrap}>
               <p className={`${styles.detailHeader} text text_type_main-large`}>
-                Детали заказа
+                {orderTitle}
               </p>
               <OrderInfo />
             </div>
@@ -106,7 +111,7 @@ export const RouteComponent = (): React.JSX.Element => {
             <ProtectedRoute>
               <div className={styles.detailPageWrap}>
                 <p className={`${styles.detailHeader} text text_type_main-large`}>
-                  Детали заказа
+                  {orderTitle}
                 </p>
                 <OrderInfo />
               </div>
@@ -120,7 +125,7 @@ export const RouteComponent = (): React.JSX.Element => {
           <Route
             path="/feed/:number"
             element={
-              <Modal title="Детали заказа" onClose={closeModal}>
+              <Modal title={orderTitle} onClose={closeModal}>
                 <OrderInfo />
               </Modal>
             }
@@ -137,7 +142,7 @@ export const RouteComponent = (): React.JSX.Element => {
             path="/profile/orders/:number"
             element={
               <ProtectedRoute>
-                <Modal title="Детали заказа" onClose={closeModal}>
+                <Modal title={orderTitle} onClose={closeModal}>
                   <OrderInfo />
                 </Modal>
               </ProtectedRoute>

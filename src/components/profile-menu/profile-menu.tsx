@@ -9,8 +9,12 @@ export const ProfileMenu = (): React.JSX.Element => {
   const navigate = useNavigate();
 
   const handleLogout = async (): Promise<void> => {
-    await dispatch(logoutUser());
-    void navigate('/login');
+    try {
+      await dispatch(logoutUser()).unwrap();
+      void navigate('/login');
+    } catch (error) {
+      console.error('Не удалось выйти из аккаунта:', error);
+    }
   };
 
   return <ProfileMenuUI handleLogout={() => void handleLogout()} pathname={pathname} />;
